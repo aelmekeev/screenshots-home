@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  app:
+    container_name: "screenshots-home-app"
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - screenshots-home
+  db:
+    container_name: "screenshots-home-db"
+    image: mongo:4.0.3
+    volumes:
+      - mongo-db:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - screenshots-home
+
+networks:
+  screenshots-home:
+
+volumes:
+  mongo-db:

@@ -7,7 +7,7 @@ class App {
 
     public app: express.Application;
     public router: Routes = new Routes();
-    public mongoUrl: string = 'mongodb://localhost/Screenshots';
+    public mongoUrl: string = 'mongodb://screenshots-home-db/Screenshots';
 
     constructor() {
         this.app = express();
