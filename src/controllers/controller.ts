@@ -8,12 +8,20 @@ export class Controller {
     public addScreenshot(req: Request, res: Response) {
         const newScreenshot = new Screenshot(req.body);
 
-        newScreenshot.save((err, contact) => {
-            if(err) {
-                res.send(err);
-            } else {
-                res.json(contact);
-            }
+        newScreenshot.save((err, screenshot) => {
+            err ? res.send(err) : res.json(screenshot);
         })
+    }
+
+    public getScreenshot(req: Request, res: Response) {
+        Screenshot.findById(req.params.id, (err, screenshot) => {
+            err ? res.send(err) : res.json(screenshot);
+        });
+    }
+
+    public deleteScreenshot(req: Request, res: Response) {
+        Screenshot.remove({_id: req.params.id}, (err) => {
+            err ? res.send(err) : res.json({message: 'Screenshot was successfully removed.'});
+        });
     }
 }

@@ -15,21 +15,8 @@ export class Routes {
         // Add new screenshot
         app.route('/screenshots')
             .post(this.controller.addScreenshot);
-        app.route('/screenshots/:screenshotId')
-            .get((req: Request, res: Response) => {
-                res.status(200).send({
-                    message: 'Get screenshot endpoint'
-                })
-            })
-            .patch((req: Request, res: Response) => {
-                res.status(200).send({
-                    message: 'Update screenshot endpoint'
-                })
-            })
-            .delete((req: Request, res: Response) => {
-                res.status(200).send({
-                    message: 'Delete screenshot endpoint'
-                })
-            });
+        app.route('/screenshots/:id')
+            .get(this.controller.getScreenshot)
+            .delete(this.controller.deleteScreenshot);
     }
 }

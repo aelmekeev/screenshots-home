@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "test",
+			"name": "UI endpoint",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -21,6 +21,34 @@
 					],
 					"path": [
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new screenshot",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"image\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAB7AAAAewFHS0ubAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAJ9QTFRF/////6pV26Qkz58w5pka05Ah2b0JwaoX4KIfz5gp46Uc0Jok46Eczpgn44I84Kcb4qca5qoZy5sk5KgbzZsj0p8l0Z0m5Kobz54l5KsYzZ0k5a0Wy50k5bIT44Q8yqEj4oU9xYE+wYA/5LMRx6Ai5bYNxaEg5LoJwqIf5b4F5cIDvaQdvqQdv6Me5cEDu6Qdw39AxaAhxoA/5LUO5cQAZ6jANwAAAC90Uk5TAAMOEBQXGyEhJSUrLjQ3S05RVFVXWl5pdKGsrrm8xcbKzs/m6+7y9/n9/f7+/v6klZMMAAAAdklEQVQYGQXBywqCUBQAwDmn21UUpJCwTf//YW2CHouKCiJtJoA4OC6gQDu2m7l+rm8Epqny5Xc5kdSxAquxIZk6gLInaQFoSAoADanrAcheWgNAIwUApBQAEFICQEgVAIosAwAM68gOdtv5foZXmZ+Qi9sD/AGwGBQETnaufAAAAABJRU5ErkJggg==\",\n\t\"tags\": [\"test\", \"first-screenshot\"]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/screenshots",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"screenshots"
 					]
 				}
 			},
