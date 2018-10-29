@@ -7,6 +7,28 @@
 	"item": [
 		{
 			"name": "UI endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "94b2a259-fb8e-4c6e-97fd-aa5975ce6536",
+						"exec": [
+							"pm.test(request.name + ' - Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(request.name + ' - Response is valid', function() {",
+							"    let expectedResponse = {",
+							"        message: 'UI endpoint'",
+							"    }",
+							"",
+							"    pm.expect(pm.response.json()).to.deep.equal(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -28,8 +50,98 @@
 		},
 		{
 			"name": "Add new screenshot",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af7fb5e7-7d75-480c-89b7-db275a0d79a6",
+						"exec": [
+							"pm.test(request.name + ' - Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(request.name + ' - Response is valid', function() {",
+							"    let response = pm.response.json();",
+							"    ",
+							"    pm.globals.set('image_id', response._id);",
+							"",
+							"    pm.expect(response.tags).to.deep.equal(pm.globals.get('tags'));",
+							"    pm.expect(response.createdDate).to.be.a('string');",
+							"    pm.expect(response._id).to.be.a('string');",
+							"    pm.expect(response.image).to.be.an('object');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8003cba9-1f3b-4b4f-a038-de6e5c363fe5",
+						"exec": [
+							"pm.globals.set('tags_0', 'test');",
+							"pm.globals.set('tags_1', 'first-screenshot');",
+							"pm.globals.set(pm.globals.get('tags_0'), pm.globals.get('tags_1'));",
+							"",
+							"pm.globals.set('image', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAB7AAAAewFHS0ubAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAJ9QTFRF/////6pV26Qkz58w5pka05Ah2b0JwaoX4KIfz5gp46Uc0Jok46Eczpgn44I84Kcb4qca5qoZy5sk5KgbzZsj0p8l0Z0m5Kobz54l5KsYzZ0k5a0Wy50k5bIT44Q8yqEj4oU9xYE+wYA/5LMRx6Ai5bYNxaEg5LoJwqIf5b4F5cIDvaQdvqQdv6Me5cEDu6Qdw39AxaAhxoA/5LUO5cQAZ6jANwAAAC90Uk5TAAMOEBQXGyEhJSUrLjQ3S05RVFVXWl5pdKGsrrm8xcbKzs/m6+7y9/n9/f7+/v6klZMMAAAAdklEQVQYGQXBywqCUBQAwDmn21UUpJCwTf//YW2CHouKCiJtJoA4OC6gQDu2m7l+rm8Epqny5Xc5kdSxAquxIZk6gLInaQFoSAoADanrAcheWgNAIwUApBQAEFICQEgVAIosAwAM68gOdtv5foZXmZ+Qi9sD/AGwGBQETnaufAAAAABJRU5ErkJggg==');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"image\": \"{{image}}\",\n\t\"tags\": [\"{{tags_0}}\", \"{{tags_1}}\"]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/screenshots",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"screenshots"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get screenshot",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f725bf33-74bf-432c-ab01-4c7399b15f62",
+						"exec": [
+							"pm.test(request.name + ' - Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(request.name + ' - Response is valid', function() {",
+							"    let response = pm.response.json();",
+							"",
+							"    pm.expect(response.tags).to.deep.equal(pm.globals.get('tags'));",
+							"    pm.expect(response.createdDate).to.be.a('string');",
+							"    pm.expect(response._id).to.equal(pm.globals.get('image_id'));",
+							"    pm.expect(response.image).to.be.an('object');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -43,12 +155,64 @@
 					"raw": "{\n\t\"image\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAB7AAAAewFHS0ubAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAJ9QTFRF/////6pV26Qkz58w5pka05Ah2b0JwaoX4KIfz5gp46Uc0Jok46Eczpgn44I84Kcb4qca5qoZy5sk5KgbzZsj0p8l0Z0m5Kobz54l5KsYzZ0k5a0Wy50k5bIT44Q8yqEj4oU9xYE+wYA/5LMRx6Ai5bYNxaEg5LoJwqIf5b4F5cIDvaQdvqQdv6Me5cEDu6Qdw39AxaAhxoA/5LUO5cQAZ6jANwAAAC90Uk5TAAMOEBQXGyEhJSUrLjQ3S05RVFVXWl5pdKGsrrm8xcbKzs/m6+7y9/n9/f7+/v6klZMMAAAAdklEQVQYGQXBywqCUBQAwDmn21UUpJCwTf//YW2CHouKCiJtJoA4OC6gQDu2m7l+rm8Epqny5Xc5kdSxAquxIZk6gLInaQFoSAoADanrAcheWgNAIwUApBQAEFICQEgVAIosAwAM68gOdtv5foZXmZ+Qi9sD/AGwGBQETnaufAAAAABJRU5ErkJggg==\",\n\t\"tags\": [\"test\", \"first-screenshot\"]\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/screenshots",
+					"raw": "{{baseUrl}}/screenshots/{{image_id}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"screenshots"
+						"screenshots",
+						"{{image_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete screenshot",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6e08ca86-273c-4d66-ba1b-1a96e364077c",
+						"exec": [
+							"pm.test(request.name + ' - Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(request.name + ' - Response is valid', function() {",
+							"    let expectedResponse = {",
+							"        message: 'Screenshot was successfully removed.'",
+							"    }",
+							"",
+							"    pm.expect(pm.response.json()).to.deep.equal(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"image\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAB7AAAAewFHS0ubAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAJ9QTFRF/////6pV26Qkz58w5pka05Ah2b0JwaoX4KIfz5gp46Uc0Jok46Eczpgn44I84Kcb4qca5qoZy5sk5KgbzZsj0p8l0Z0m5Kobz54l5KsYzZ0k5a0Wy50k5bIT44Q8yqEj4oU9xYE+wYA/5LMRx6Ai5bYNxaEg5LoJwqIf5b4F5cIDvaQdvqQdv6Me5cEDu6Qdw39AxaAhxoA/5LUO5cQAZ6jANwAAAC90Uk5TAAMOEBQXGyEhJSUrLjQ3S05RVFVXWl5pdKGsrrm8xcbKzs/m6+7y9/n9/f7+/v6klZMMAAAAdklEQVQYGQXBywqCUBQAwDmn21UUpJCwTf//YW2CHouKCiJtJoA4OC6gQDu2m7l+rm8Epqny5Xc5kdSxAquxIZk6gLInaQFoSAoADanrAcheWgNAIwUApBQAEFICQEgVAIosAwAM68gOdtv5foZXmZ+Qi9sD/AGwGBQETnaufAAAAABJRU5ErkJggg==\",\n\t\"tags\": [\"test\", \"first-screenshot\"]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/screenshots/{{image_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"screenshots",
+						"{{image_id}}"
 					]
 				}
 			},
