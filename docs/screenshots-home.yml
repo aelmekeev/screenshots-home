@@ -1,0 +1,136 @@
+openapi: '3.0.2'
+info:
+  title: Screenshots home API
+  decsription: Application allows to store screenshots and review them in an easy way
+  license:
+    name: MIT
+  version: 1.0.0
+paths:
+  /screenshots:
+    get:
+      summary: List all screenshots
+      description: This is paged API for a list of screenshots with ability to filter them by tags
+      parameters:
+        - name: tags
+          in: query
+          description: Comma separated list of tags to filter the list of screenshots
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: One filtered page of screenshots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Screenshot'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a screenshot
+      description: This method adds screenshot to a storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Screenshot'
+        required: true
+      responses:
+      resposes:
+        '201':
+          description: A newly creted screenshot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screenshot'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /screenshots/{screenshotId}:
+    get:
+      summary: Get a screenshot
+      description: This method returns a single screenshot by it's ID
+      parameters:
+        - name: screenshotId
+          in: path
+          description: The id of the screenshot to retrieve
+          required: true
+          schema:
+            type: string
+      resposes:
+        '200':
+          description: A single screenshot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screenshot'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a screenshot
+      description: This method deletes a single screenshot by it's ID
+      parameters:
+      - name: screenshotId
+        in: path
+        description: The id of the screenshot to delete
+        required: true
+        schema:
+          type: string
+      resposes:
+        '204':
+          description: Notifies consumer of API about successull delete operation
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Screenshot:
+      type: Object
+      required:
+        - data
+      properties:
+        id:
+          type: string
+          description: An ID of the screenshot assigned to it after saving it
+        data:
+          type: string
+          format: byte
+          description: Base64 encoded sctring with the an image
+        tags:
+          type: string
+          description: Comma separated list of tags to filter the list of screenshots
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
